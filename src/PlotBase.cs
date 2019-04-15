@@ -246,6 +246,20 @@ namespace InteractiveDataDisplay.WPF
 
         #endregion
 
+        #region events & handlers
+        public delegate void PlotChangeEventHandler(object sender, DataRect newSIze);
+        public event PlotChangeEventHandler PlotChanging;
+        public event PlotChangeEventHandler PlotChaned;
+
+        internal void MotifyPlotChanged()
+        {
+            EnumAll(p =>
+            {
+                p.PlotChaned?.Invoke(p, p.PlotRect);
+            });
+        }
+        #endregion
+
         /// <summary>
         /// Initializes new instance of <see cref="PlotBase"/> class
         /// </summary>
@@ -826,10 +840,11 @@ namespace InteractiveDataDisplay.WPF
                     p.IsAutoFitEnabled = false;
                     p.InvalidateMeasure();
                 }
+                p.PlotChanging?.Invoke(p, p.PlotRect);
             });
-                 
             IsInternalChange = false;
         }
+
 
         /// <summary>
         /// Sets plot rectangle for current instance of <see cref="PlotBase"/>

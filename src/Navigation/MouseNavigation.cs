@@ -481,7 +481,7 @@ namespace InteractiveDataDisplay.WPF
                 }
             }
             this.ReleaseMouseCapture();
-
+            masterPlot.MotifyPlotChanged();
             return true;
         }
 
