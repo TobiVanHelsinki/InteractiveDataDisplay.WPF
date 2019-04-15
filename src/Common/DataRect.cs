@@ -20,7 +20,7 @@ namespace InteractiveDataDisplay.WPF
         /// <summary>
         /// Gets the empty <see cref="DataRect"/>.
         /// </summary>
-        public static readonly DataRect Empty = 
+        public static readonly DataRect Empty =
             new DataRect(Range.Empty, Range.Empty);
 
         /// <summary>
@@ -71,9 +71,9 @@ namespace InteractiveDataDisplay.WPF
         /// </summary>
         public double Width
         {
-            get 
-            { 
-                return X.Max - X.Min; 
+            get
+            {
+                return X.Max - X.Min;
             }
         }
 
@@ -81,11 +81,11 @@ namespace InteractiveDataDisplay.WPF
         /// Gets the height of <see cref="DataRect"/>.
         /// </summary>
         public double Height
-        { 
-            get 
-            { 
-                return Y.Max - Y.Min; 
-            } 
+        {
+            get
+            {
+                return Y.Max - Y.Min;
+            }
         }
 
         /// <summary>
@@ -93,47 +93,47 @@ namespace InteractiveDataDisplay.WPF
         /// </summary>
         /// <value>The left.</value>
         public double XMin
-        { 
-            get 
-            { 
-                return X.Min; 
-            } 
+        {
+            get
+            {
+                return X.Min;
+            }
         }
 
         /// <summary>
         /// Gets the right.
         /// </summary>
         /// <value>The right.</value>
-        public double XMax 
-        { 
-            get 
-            { 
-                return X.Max; 
-            } 
+        public double XMax
+        {
+            get
+            {
+                return X.Max;
+            }
         }
 
         /// <summary>
         /// Gets the bottom.
         /// </summary>
         /// <value>The bottom.</value>
-        public double YMin 
-        { 
-            get 
-            { 
-                return Y.Min; 
-            } 
+        public double YMin
+        {
+            get
+            {
+                return Y.Min;
+            }
         }
 
         /// <summary>
         /// Gets the top.
         /// </summary>
         /// <value>The top.</value>
-        public double YMax 
-        { 
-            get 
-            { 
-                return Y.Max; 
-            } 
+        public double YMax
+        {
+            get
+            {
+                return Y.Max;
+            }
         }
 
         /// <summary>
@@ -151,12 +151,12 @@ namespace InteractiveDataDisplay.WPF
         /// Gets a value indicating whether this instance is empty.
         /// </summary>
         /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
-        public bool IsEmpty 
-        { 
-            get 
-            { 
-                return X.IsEmpty || Y.IsEmpty; 
-            } 
+        public bool IsEmpty
+        {
+            get
+            {
+                return X.IsEmpty || Y.IsEmpty;
+            }
         }
 
 
@@ -226,6 +226,18 @@ namespace InteractiveDataDisplay.WPF
         public override string ToString()
         {
             return "{" + X.ToString() + " " + Y.ToString() + "}";
+        }
+
+        public static bool operator ==(DataRect A, DataRect B)
+        {
+            return A.Height == B.Height 
+                && A.Width == B.Width
+                && A.XMin == B.XMin
+                && A.YMax == B.YMax;
+        }
+        public static bool operator !=(DataRect A, DataRect B)
+        {
+            return !(A == B);
         }
     }
 }
