@@ -85,6 +85,7 @@ namespace InteractiveDataDisplay.WPF
                         rect.YMin - dy + rect.Height));
 
                     masterPlot.IsAutoFitEnabled = false;
+                    masterPlot.NotifyPlotChanged();
                     e.Handled = true;
                 }
                 if (e.Key == Key.Down && IsVerticalNavigationEnabled)
@@ -99,6 +100,7 @@ namespace InteractiveDataDisplay.WPF
                         rect.YMin - dy + rect.Height));
 
                     masterPlot.IsAutoFitEnabled = false;
+                    masterPlot.NotifyPlotChanged();
                     e.Handled = true;
                 }
                 if (e.Key == Key.Right && IsHorizontalNavigationEnabled)
@@ -113,6 +115,7 @@ namespace InteractiveDataDisplay.WPF
                         rect.YMin + rect.Height));
 
                     masterPlot.IsAutoFitEnabled = false;
+                    masterPlot.NotifyPlotChanged();
                     e.Handled = true;
                 }
                 if (e.Key == Key.Left && IsHorizontalNavigationEnabled)
@@ -127,23 +130,27 @@ namespace InteractiveDataDisplay.WPF
                         rect.YMin + rect.Height));
 
                     masterPlot.IsAutoFitEnabled = false;
+                    masterPlot.NotifyPlotChanged();
                     e.Handled = true;
                 }
                 if (e.Key == Key.Subtract)
                 {
                     DoZoom(1.2);
                     masterPlot.IsAutoFitEnabled = false;
+                    masterPlot.NotifyPlotChanged();
                     e.Handled = true;
                 }
                 if (e.Key == Key.Add)
                 {
                     DoZoom(1 / 1.2);
                     masterPlot.IsAutoFitEnabled = false;
+                    masterPlot.NotifyPlotChanged();
                     e.Handled = true;
                 }
                 if (e.Key == Key.Home)
                 {
                     masterPlot.IsAutoFitEnabled = true;
+                    masterPlot.NotifyPlotChanged();
                     e.Handled = true;
                 }
             }

@@ -27,6 +27,9 @@ namespace InteractiveDataDisplay.WPF
 
         private DataRect actualPlotRect = new DataRect(0, 0, 1, 1);
 
+        readonly Stack<DataRect> NavigationBackStack = new Stack<DataRect>();
+        readonly Stack<DataRect> NavigationForthStack = new Stack<DataRect>();
+
         #endregion
 
         #region Properties
@@ -243,6 +246,23 @@ namespace InteractiveDataDisplay.WPF
         }
 
 
+        /// <summary>
+        /// Determines, if the NavigationStack backwards contains elements
+        /// </summary>
+        public bool CanNavigateBack
+        {
+            get { return (bool)GetValue(CanNavigateBackProperty); }
+            set { SetValue(CanNavigateBackProperty, value); }
+        }
+
+        /// <summary>
+        /// Determines, if the NavigationStack forewards contains elements
+        /// </summary>
+        public bool CanNavigateForth
+        {
+            get { return (bool)GetValue(CanNavigateForthProperty); }
+            set { SetValue(CanNavigateForthProperty, value); }
+        }
 
         #endregion
 
@@ -251,7 +271,7 @@ namespace InteractiveDataDisplay.WPF
         public event PlotChangeEventHandler PlotChanging;
         public event PlotChangeEventHandler PlotChaned;
 
-        internal void MotifyPlotChanged()
+        internal void NotifyPlotChanged()
         {
             EnumAll(p =>
             {
@@ -575,6 +595,20 @@ namespace InteractiveDataDisplay.WPF
                     }
                 }));
 
+
+        /// <summary>
+        /// Identifies <see cref="CanNavigateBack"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty CanNavigateBackProperty =
+            DependencyProperty.Register("CanNavigateBack", typeof(bool), typeof(PlotBase), new PropertyMetadata(false));
+
+        /// <summary>
+        /// Identifies <see cref="CanNavigateForth"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty CanNavigateForthProperty =
+            DependencyProperty.Register("CanNavigateForth", typeof(bool), typeof(PlotBase), new PropertyMetadata(false));
+
+
         /// <summary>Enables or disables clipping of graphic elements that are outside plotting area</summary>
         public bool ClipToBounds
         {
@@ -595,6 +629,7 @@ namespace InteractiveDataDisplay.WPF
         {
             InvalidateMeasure(); 
         }
+
 
         #endregion
 
@@ -697,7 +732,10 @@ namespace InteractiveDataDisplay.WPF
                 {
                     p.IsAutoFitEnabled = (bool)e.NewValue;
                     if (p.IsAutoFitEnabled)
+                    {
+                        p.NotifyPlotChanged();
                         p.InvalidateMeasure();
+                    }
                 });
                 IsInternalChange = false;
             }
@@ -916,7 +954,10 @@ namespace InteractiveDataDisplay.WPF
         protected virtual void PlotBaseLoaded(object sender, RoutedEventArgs e)
         {
             connectMaster();
+            Add2NavigationStack(PlotRect);
+            PlotChaned += (sender2, newSize) => Add2NavigationStack(newSize);
         }
+
 
         /// <summary>
         /// Occurs when PlotBase is unloaded
@@ -956,9 +997,92 @@ namespace InteractiveDataDisplay.WPF
             return availableSize;
         }
 
+        /// <summary>
+        /// Updates the CanNavigateBack Property
+        /// Should be callen when ever the stack changes
+        /// </summary>
+        /// <returns>the new Value of CanNavigateBack</returns>
+        bool SetCanNavigateBack()
+        {
+            var newval = NavigationBackStack.Count > 1;
+            CanNavigateBack = newval;
+            return newval;
+        }
+
+        /// <summary>
+        /// Updates the CanNavigateForth Property
+        /// Should be callen when ever the stack changes
+        /// </summary>
+        /// <returns>the new Value of CanNavigateForth</returns>
+        bool SetCanNavigateForth()
+        {
+            var newval = NavigationForthStack.Count != 0;
+            CanNavigateForth = newval;
+            return newval;
+        }
+
+        /// <summary>
+        /// Adds a new PlotRect to the Navigation Stack. Use NavigateBack to restore it.
+        /// This Method should be callen every time, a significant plot change occures (mouse move etc)
+        /// </summary>
+        /// <param name="newSIze"></param>
+        public void Add2NavigationStack(DataRect newSIze)
+        {
+            if (NavigationBackStack.Count == 0 || NavigationBackStack.Peek() != newSIze)
+            {
+                NavigationBackStack.Push(newSIze);
+                //NotifyPropertyChanged(nameof(CanNavigateBack));
+                SetCanNavigateBack();
+                NavigationForthStack.Clear();
+                //NotifyPropertyChanged(nameof(CanNavigateForth));
+                SetCanNavigateForth();
+            }
+        }
+
+        /// <summary>
+        /// Set the PlotRect to the PlotRect befor the last manipulation
+        /// </summary>
+        public void NavigateBack()
+        {
+            if (NavigationBackStack.Count > 1)
+            {
+                var currentP = NavigationBackStack.Pop();
+                var lastP = NavigationBackStack.Peek();
+                NavigationForthStack.Push(currentP);
+                //NotifyPropertyChanged(nameof(CanNavigateBack));
+                SetCanNavigateBack();
+                //NotifyPropertyChanged(nameof(CanNavigateForth));
+                SetCanNavigateForth();
+                //foreach (var item in lines.Children.OfType<LineGraph>())
+                {
+                    //item.
+                    SetPlotRect(lastP);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reverts a NavigateBack Operation
+        /// </summary>
+        public void NavigateForth()
+        {
+            if (NavigationForthStack.Count != 0)
+            {
+                var lastP = NavigationForthStack.Pop();
+                NavigationBackStack.Push(lastP);
+                //NotifyPropertyChanged(nameof(CanNavigateBack));
+                SetCanNavigateBack();
+                //NotifyPropertyChanged(nameof(CanNavigateForth));
+                SetCanNavigateForth();
+                //foreach (var item in lines.Children.OfType<LineGraph>())
+                {
+                    //item.
+                    SetPlotRect(lastP);
+                }
+            }
+        }
+
         #endregion
-
-
     }
 }
 

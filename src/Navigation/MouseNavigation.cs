@@ -203,6 +203,7 @@ namespace InteractiveDataDisplay.WPF
             // TODO: Zoom relative to mouse position
             double factor = e.Delta < 0 ? 1.2 : 1 / 1.2;
             DoZoom(factor);
+            masterPlot.NotifyPlotChanged();
             e.Handled = true;
         }
 
@@ -481,7 +482,7 @@ namespace InteractiveDataDisplay.WPF
                 }
             }
             this.ReleaseMouseCapture();
-            masterPlot.MotifyPlotChanged();
+            masterPlot.NotifyPlotChanged();
             return true;
         }
 
