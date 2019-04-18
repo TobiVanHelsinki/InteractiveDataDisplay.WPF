@@ -239,6 +239,10 @@ namespace InteractiveDataDisplay.WPF
         {
             return !(A == B);
         }
+
+        public override bool Equals(object obj) => base.Equals(obj);
+
+        public override int GetHashCode() => base.GetHashCode();
     }
 }
 
