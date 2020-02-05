@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETFRAMEWORK;NETFRAMEWORK;</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFRAMEWORK;NETFRAMEWORK;WINDOWS_DESKTOP;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -42,6 +42,9 @@
     <PackageTags>idd wpf visualization plot plots plotting chart charting data interactive datavisualization</PackageTags>
     <PackageProjectUrl>https://github.com/Microsoft/InteractiveDataDisplay.WPF</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Microsoft/InteractiveDataDisplay.WPF/blob/master/LICENSE</PackageLicenseUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net452|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

@@ -11,7 +11,7 @@
             <d3:Plot>
                 <d3:CircleMarkerGraph Name="circles" Description="Species distribution"
                                   ColorDescription="Population" SizeDescription="Age" Min="1" Max="20"/>
-                <d3:DiamondMarkerGraph Name="diamonds" Description="Species distribution" ColorDescription="Population" SizeDescription="Age" Min="1" Max="20"/>
+                <!--<d3:DiamondMarkerGraph Name="diamonds" Description="Species distribution" ColorDescription="Population" SizeDescription="Age" Min="1" Max="20"/>-->
             </d3:Plot>
         </d3:Chart>
     </Grid>
